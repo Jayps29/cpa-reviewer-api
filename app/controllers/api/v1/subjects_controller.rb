@@ -2,7 +2,7 @@ module Api
   module V1
     class SubjectsController < ApplicationController
       before_action :authenticate_user!
-      before_action :set_subject, only: [ :update, :destroy ]
+      before_action :set_subject, only: [:show, :update, :destroy]
 
       def index
         authorize! :read, Subject
@@ -28,6 +28,14 @@ module Api
             errors: subject.errors.full_messages
           }, status: :unprocessable_entity
         end
+      end
+
+      def show
+        authorize! :read, Subject
+      
+        render json: {
+          subject: @subject
+        }
       end
 
       def update

@@ -10,7 +10,8 @@ class Users::SessionsController < Devise::SessionsController
       user: {
         id: resource.id,
         name: resource.name,
-        email: resource.email
+        email: resource.email,
+        role: resource.role
       }
     }, status: :ok
   end
