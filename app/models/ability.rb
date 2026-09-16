@@ -5,9 +5,9 @@ class Ability
     user ||= User.new
 
     if user.admin?
-      can :manage, :all
+      can :manage, Subject
     elsif user.student?
-      can :read, :all
+      can :read, Subject
     end
   end
 end
