@@ -7,7 +7,7 @@ Rails.application.routes.draw do
     namespace :v1 do
       get "/me", to: "me#show"
 
-      resources :subjects, only: [ :index, :create, :update, :destroy ] do
+      resources :subjects, only: [ :index, :show, :create, :update, :destroy ] do
         resources :topics, only: [ :index ]
       end
 
