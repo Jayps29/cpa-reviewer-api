@@ -2,7 +2,7 @@ module Api
   module V1
     class SubjectsController < ApplicationController
       before_action :authenticate_user!
-      before_action :set_subject, only: [:show, :update, :destroy]
+      before_action :set_subject, only: [ :show, :update, :destroy ]
 
       def index
         authorize! :read, Subject
@@ -32,7 +32,7 @@ module Api
 
       def show
         authorize! :read, Subject
-      
+
         render json: {
           subject: @subject
         }
