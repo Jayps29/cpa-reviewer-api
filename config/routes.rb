@@ -15,7 +15,11 @@ Rails.application.routes.draw do
         resources :lessons, only: [ :index, :create ]
       end
 
-      resources :lessons, only: [ :update, :destroy ]
+      resources :lessons, only: [ :update, :destroy ] do
+        resources :activities, only: [ :index, :create ]
+      end
+
+      resources :activities, only: [ :update, :destroy ]
     end
   end
 

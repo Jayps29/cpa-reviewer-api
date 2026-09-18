@@ -10,7 +10,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_09_17_133504) do
+ActiveRecord::Schema[8.1].define(version: 2026_09_18_025703) do
+  create_table "activities", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "activity_type", null: false
+    t.datetime "created_at", null: false
+    t.text "explanation"
+    t.bigint "lesson_id", null: false
+    t.integer "position", null: false
+    t.text "prompt"
+    t.string "title"
+    t.datetime "updated_at", null: false
+    t.index ["lesson_id", "position"], name: "index_activities_on_lesson_id_and_position", unique: true
+    t.index ["lesson_id"], name: "index_activities_on_lesson_id"
+  end
+
   create_table "lessons", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.text "description"
@@ -52,6 +65,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_17_133504) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "activities", "lessons"
   add_foreign_key "lessons", "topics"
   add_foreign_key "topics", "subjects"
 end

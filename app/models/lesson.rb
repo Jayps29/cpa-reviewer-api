@@ -1,5 +1,6 @@
 class Lesson < ApplicationRecord
   belongs_to :topic
+  has_many :activities, dependent: :destroy
 
   validates :title, presence: true
   validates :position, presence: true
