@@ -9,7 +9,7 @@ module Api
             id: current_user.id,
             name: current_user.name,
             email: current_user.email,
-            role: resource.role
+            role: current_user.role
           }
         }
       end
