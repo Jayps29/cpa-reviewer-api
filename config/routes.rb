@@ -17,6 +17,8 @@ Rails.application.routes.draw do
 
       resources :lessons, only: [ :update, :destroy ] do
         resources :activities, only: [ :index, :create ]
+
+        get "/learn", to: "activities#learn"
       end
 
       resources :activities, only: [ :update, :destroy ]
