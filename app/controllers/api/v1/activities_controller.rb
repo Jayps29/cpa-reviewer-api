@@ -11,10 +11,26 @@ module Api
         activities = lesson.activities.order(:position)
 
         render json: {
-  activities: activities.as_json(
-    include: :activity_options
-  )
-}
+        activities: activities.as_json(
+          include: :activity_options
+        )
+      }
+      end
+
+      def learn
+        authorize! :read, Lesson
+      
+        lesson = Lesson.find(params[:lesson_id])
+        activities = lesson.activities.order(:position)
+      
+        render json: {
+          lesson: {
+            id: lesson.id,
+            title: lesson.title,
+            description: lesson.description,
+            activities: activities.map { |activity| student_activity_json(activity) }
+          }
+        }
       end
 
       def create
@@ -26,10 +42,10 @@ module Api
 
         if activity.save
           render json: {
-  activity: activity.as_json(
-    include: :activity_options
-  )
-}, status: :created
+          activity: activity.as_json(
+            include: :activity_options
+          )
+        }, status: :created
         else
           render json: {
             errors: activity.errors.full_messages
@@ -108,6 +124,32 @@ module Api
             :_destroy
           ]
         )
+      end
+
+      def student_activity_json(activity)
+        data = {
+          id: activity.id,
+          activity_type: activity.activity_type,
+          title: activity.title,
+          prompt: activity.prompt,
+          position: activity.position
+        }
+      
+        if activity.activity_type == "explanation"
+          data[:explanation] = activity.explanation
+        elsif %w[multiple_choice true_false].include?(activity.activity_type)
+          data[:options] = activity.activity_options
+            .order(:position)
+            .map do |option|
+              {
+                id: option.id,
+                text: option.text,
+                position: option.position
+              }
+            end
+        end
+      
+        data
       end
     end
   end
