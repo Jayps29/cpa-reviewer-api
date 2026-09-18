@@ -40,15 +40,38 @@ module Api
       def update
         authorize! :update, @activity
 
-        if @activity.update(activity_params)
+        attrs = activity_params
+
+        type_changed =
+          attrs[:activity_type].present? &&
+          attrs[:activity_type] != @activity.activity_type
+
+        begin
+          Activity.transaction do
+            if type_changed
+              @activity.activity_options.destroy_all
+              @activity.reload
+
+              options =
+                attrs[:activity_options_attributes]&.reject do |option|
+                  ActiveModel::Type::Boolean.new.cast(option[:_destroy])
+                end
+
+              attrs = attrs.except(:activity_options_attributes)
+              attrs[:activity_options_attributes] = options if options
+            end
+
+            @activity.update!(attrs)
+          end
+
           render json: {
-  activity: @activity.as_json(
-    include: :activity_options
-  )
-}
-        else
+            activity: @activity.as_json(
+              include: :activity_options
+            )
+          }
+        rescue ActiveRecord::RecordInvalid => e
           render json: {
-            errors: @activity.errors.full_messages
+            errors: e.record.errors.full_messages
           }, status: :unprocessable_entity
         end
       end
