@@ -11,8 +11,10 @@ module Api
         activities = lesson.activities.order(:position)
 
         render json: {
-          activities: activities
-        }
+  activities: activities.as_json(
+    include: :activity_options
+  )
+}
       end
 
       def create
@@ -24,8 +26,10 @@ module Api
 
         if activity.save
           render json: {
-            activity: activity
-          }, status: :created
+  activity: activity.as_json(
+    include: :activity_options
+  )
+}, status: :created
         else
           render json: {
             errors: activity.errors.full_messages
@@ -38,8 +42,10 @@ module Api
 
         if @activity.update(activity_params)
           render json: {
-            activity: @activity
-          }
+  activity: @activity.as_json(
+    include: :activity_options
+  )
+}
         else
           render json: {
             errors: @activity.errors.full_messages
@@ -69,7 +75,15 @@ module Api
           :title,
           :prompt,
           :explanation,
-          :position
+          :correct_answer,
+          :position,
+          activity_options_attributes: [
+            :id,
+            :text,
+            :position,
+            :is_correct,
+            :_destroy
+          ]
         )
       end
     end
