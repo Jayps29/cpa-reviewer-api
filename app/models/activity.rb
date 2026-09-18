@@ -31,9 +31,11 @@ class Activity < ApplicationRecord
   private
 
   def validate_activity_content
+    active_options = activity_options.reject(&:marked_for_destruction?)
+
     case activity_type
     when "explanation"
-      if activity_options.any?
+      if active_options.any?
         errors.add(
           :activity_options,
           "are not allowed for explanation activities"
@@ -48,14 +50,14 @@ class Activity < ApplicationRecord
       end
 
     when "multiple_choice"
-      if activity_options.size < 2
+      if active_options.size < 2
         errors.add(
           :activity_options,
           "must have at least 2 options"
         )
       end
 
-      if activity_options.count(&:is_correct) != 1
+      if active_options.count(&:is_correct) != 1
         errors.add(
           :activity_options,
           "must have exactly 1 correct option"
@@ -63,14 +65,14 @@ class Activity < ApplicationRecord
       end
 
     when "true_false"
-      if activity_options.size != 2
+      if active_options.size != 2
         errors.add(
           :activity_options,
           "must have exactly 2 options"
         )
       end
 
-      if activity_options.count(&:is_correct) != 1
+      if active_options.count(&:is_correct) != 1
         errors.add(
           :activity_options,
           "must have exactly 1 correct option"
