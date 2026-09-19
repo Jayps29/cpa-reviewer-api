@@ -9,6 +9,7 @@ class Activity < ApplicationRecord
 
   belongs_to :lesson
   has_many :activity_options, dependent: :destroy
+  has_many :activity_attempts, dependent: :destroy
 
   accepts_nested_attributes_for :activity_options,
                                 allow_destroy: true

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_09_18_034158) do
+ActiveRecord::Schema[8.1].define(version: 2026_09_18_111909) do
   create_table "activities", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "activity_type", null: false
     t.text "correct_answer"
@@ -23,6 +23,17 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_18_034158) do
     t.datetime "updated_at", null: false
     t.index ["lesson_id", "position"], name: "index_activities_on_lesson_id_and_position", unique: true
     t.index ["lesson_id"], name: "index_activities_on_lesson_id"
+  end
+
+  create_table "activity_attempts", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "activity_id", null: false
+    t.text "answer"
+    t.boolean "correct", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["activity_id"], name: "index_activity_attempts_on_activity_id"
+    t.index ["user_id"], name: "index_activity_attempts_on_user_id"
   end
 
   create_table "activity_options", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -78,6 +89,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_18_034158) do
   end
 
   add_foreign_key "activities", "lessons"
+  add_foreign_key "activity_attempts", "activities"
+  add_foreign_key "activity_attempts", "users"
   add_foreign_key "activity_options", "activities"
   add_foreign_key "lessons", "topics"
   add_foreign_key "topics", "subjects"
