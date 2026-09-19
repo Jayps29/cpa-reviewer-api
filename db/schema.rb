@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_09_18_111909) do
+ActiveRecord::Schema[8.1].define(version: 2026_09_19_175858) do
   create_table "activities", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "activity_type", null: false
     t.text "correct_answer"
@@ -48,6 +48,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_18_111909) do
   end
 
   create_table "lessons", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.text "content"
     t.datetime "created_at", null: false
     t.text "description"
     t.integer "position", null: false

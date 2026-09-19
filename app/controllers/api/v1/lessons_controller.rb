@@ -57,6 +57,21 @@ module Api
         }
       end
 
+      def study
+        authorize! :read, Lesson
+
+        lesson = Lesson.find(params[:lesson_id])
+
+        render json: {
+          lesson: {
+            id: lesson.id,
+            title: lesson.title,
+            description: lesson.description,
+            content: lesson.content
+          }
+        }
+      end
+
       private
 
       def set_lesson
@@ -67,6 +82,7 @@ module Api
         params.require(:lesson).permit(
           :title,
           :description,
+          :content,
           :position
         )
       end
