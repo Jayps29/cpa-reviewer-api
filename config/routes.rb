@@ -22,6 +22,9 @@ Rails.application.routes.draw do
       end
 
       resources :activities, only: [ :update, :destroy ]
+
+      post "/activities/:activity_id/answer",
+           to: "activity_attempts#create"
     end
   end
 

@@ -19,10 +19,10 @@ module Api
 
       def learn
         authorize! :read, Lesson
-      
+
         lesson = Lesson.find(params[:lesson_id])
         activities = lesson.activities.order(:position)
-      
+
         render json: {
           lesson: {
             id: lesson.id,
@@ -134,7 +134,7 @@ module Api
           prompt: activity.prompt,
           position: activity.position
         }
-      
+
         if activity.activity_type == "explanation"
           data[:explanation] = activity.explanation
         elsif %w[multiple_choice true_false].include?(activity.activity_type)
@@ -148,7 +148,7 @@ module Api
               }
             end
         end
-      
+
         data
       end
     end
