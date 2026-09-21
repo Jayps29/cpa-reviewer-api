@@ -20,6 +20,7 @@ Rails.application.routes.draw do
 
         get "/learn", to: "activities#learn"
         get "/study", to: "lessons#study"
+        get "/progress", to: "lessons#progress"
       end
 
       resources :activities, only: [ :update, :destroy ]

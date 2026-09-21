@@ -57,18 +57,68 @@ module Api
         }
       end
 
+      # ADD IT HERE
+      def progress
+        authorize! :read, Lesson
+
+        lesson = Lesson.find(params[:lesson_id])
+
+        activities = lesson.activities
+                            .where.not(activity_type: "explanation")
+                            .order(:position)
+
+        total = activities.count
+
+        attempts = ActivityAttempt
+          .where(
+            user: current_user,
+            activity_id: activities.select(:id)
+          )
+          .order(:created_at)
+
+        # Get the latest attempt for each activity
+        latest_attempts = attempts
+          .group_by(&:activity_id)
+          .values
+          .map(&:last)
+
+        completed = latest_attempts.count
+
+        correct = latest_attempts.count { |attempt| attempt.correct }
+
+        percentage =
+          if total.zero?
+            0
+          else
+            ((completed.to_f / total) * 100).round
+          end
+
+        completed_lesson =
+          total > 0 && completed >= total
+
+        score = {
+          correct: correct,
+          total: total
+        }
+
+        render json: {
+  progress: {
+    completed_activities: completed,
+    total_activities: total,
+    percentage: percentage,
+    score: score,
+    completed: completed_lesson
+  }
+}
+      end
+
       def study
         authorize! :read, Lesson
 
         lesson = Lesson.find(params[:lesson_id])
 
         render json: {
-          lesson: {
-            id: lesson.id,
-            title: lesson.title,
-            description: lesson.description,
-            content: lesson.content
-          }
+          lesson: lesson
         }
       end
 
