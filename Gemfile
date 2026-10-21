@@ -55,4 +55,4 @@ gem "json", "= 2.21.2"
 
 gem "rack-cors", "~> 3.0"
 
-gem "cancancan", "~> 3.6"
+gem "cancancan", "~> 3.7"
