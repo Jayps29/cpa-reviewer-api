@@ -51,7 +51,7 @@ end
 
 gem "devise", "~> 5.0"
 
-gem "json", "= 2.21.2"
+gem "json", "3.1.0"
 
 gem "rack-cors", "~> 3.0"
 
